@@ -70,6 +70,12 @@ This is a comprehensive machine learning-based product recommendation system bui
 
 ---
 
+## 📸 Screenshot
+
+> ![recom](recom.png)
+> ![chatbot](chatbot.png)
+> ![chatbot1](chatbot1.png)
+
 ## 🛠️ Installation
 
 ```bash
