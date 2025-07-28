@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Shopping Assistant</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 20px;
+            background-color: #f8f9fa;
+        }
+        .product-img {
+            width: 180px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .recommendation-section h5 {
+            margin-top: 20px;
+        }
+        .review-image img {
+            max-width: 200px;
+            max-height: 200px;
+            margin-top: 10px;
+        }
+        .review-content {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 class="text-center mb-4">🛍️ AI Shopping Assistant</h2>
+
+    <form method="POST" class="row g-3 justify-content-center">
+        <div class="col-auto">
+            <input type="text" name="product_id" class="form-control" placeholder="Enter Product ID" required>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Get Recommendations</button>
+        </div>
+        <div class="col-auto">
+            <button type="button" class="btn btn-secondary" id="clearButton">Clear</button>
+        </div>
+    </form>
+
+    {% if product_id %}
+        <div class="text-center mt-5">
+            <h4>🔎 Showing results for Product ID: <code>{{ product_id }}</code></h4>
+            {% if img_url %}
+                <img src="{{ img_url }}" class="product-img" alt="Product Image">
+            {% endif %}
+        </div>
+
+        <div class="card p-3 mt-4">
+            <h5>💬 Sentiment Summary</h5>
+            {% if sentiment_summary %}
+                <ul>
+                    <li><strong>Product Name:</strong> {{ sentiment_summary["Product Name"] }}</li>
+                    <li><strong>Most Common Sentiment:</strong> {{ sentiment_summary["Most Common Sentiment"] }}</li>
+                    <li><strong>Total Reviews:</strong> {{ sentiment_summary["Total Reviews"] }}</li>
+                </ul>
+
+                <h6>📊 Sentiment Breakdown by Rating:</h6>
+                <ul>
+                    {% for rating, breakdown in sentiment_summary["Sentiment Breakdown by Rating"].items() %}
+                        <li><strong>Rating {{ rating }}:</strong>
+                            {% for label, count in breakdown.items() %}
+                                {{ label }}: {{ count }}&nbsp;
+                            {% endfor %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No sentiment data found for this product.</p>
+            {% endif %}
+        </div>
+
+        {% if sentiment_info is not none and not sentiment_info.empty %}
+        <div class="card p-3 mt-4">
+            <h5>📝 Sample Reviews</h5>
+            <ul>
+                {% for row in sentiment_info.itertuples() %}
+                    <li class="review-content">
+                        <strong>Rating:</strong> {{ row.rating }} |
+                        <strong>Sentiment:</strong> {{ row.sentiment_label }} |
+                        <strong>Score:</strong> {{ "%.2f" | format(row.sentiment_score) }}<br>
+                        <em>{{ row.review_content }}</em>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="row recommendation-section">
+            <div class="col-md-4">
+                <div class="card p-3">
+                    <h5>📘 Content-Based Recommendations</h5>
+                    <ul>
+                        {% for pid, name in content_recs %}
+                            <li><b>{{ name }}</b> (ID: {{ pid }})</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3">
+                    <h5>🧠 Item-Based Recommendations</h5>
+                    <ul>
+                        {% for pid, name in item_recs %}
+                            <li><b>{{ name }}</b> (ID: {{ pid }})</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3">
+                    <h5>🔗 Hybrid Recommendations</h5>
+                    <ul>
+                        {% for pid, name in hybrid_recs %}
+                            <li><b>{{ name }}</b> (ID: {{ pid }})</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+<script>
+    document.getElementById("clearButton").addEventListener("click", function() {
+        // Clear the input field
+        document.querySelector("input[name='product_id']").value = "";
+        
+        // Optionally reset the form and other displayed elements
+        document.querySelector("form").reset();
+
+        // Optionally, clear the displayed product image and recommendations
+        const imgElement = document.querySelector(".product-img");
+        if (imgElement) {
+            imgElement.src = "";
+        }
+
+        // Optionally clear the recommendation lists as well
+        const recommendations = document.querySelectorAll('.recommendation-section .card');
+        recommendations.forEach(card => {
+            card.querySelector('ul').innerHTML = '';  // Clear the content
+        });
+
+        // Hide any results section if required
+        const resultSections = document.querySelectorAll('.text-center.mt-5, .card.p-3');
+        resultSections.forEach(section => {
+            section.style.display = 'none';
+        });
+    });
+</script>
+</body>
+</html>
