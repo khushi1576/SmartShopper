@@ -1,0 +1,27 @@
+# Core Libraries
+numpy
+pandas
+scikit-learn
+matplotlib
+seaborn
+scipy
+
+# Natural Language Processing
+nltk
+textblob
+
+# Web App (Flask)
+flask
+
+# GUI and Chatbot
+tkinter  # (Note: comes preinstalled with Python in most systems)
+
+# Model Persistence
+joblib
+
+# Optional Enhancements
+beautifulsoup4  # if scraping or HTML parsing is used
+requests
+
+# For Sentiment Analysis Preprocessing
+regex
