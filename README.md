@@ -1,4 +1,4 @@
-# SmartShopper: Amazon Product Recommendation System
+# SmartShopper: Amazon Product Recommendation System with mini Chatbot
 
 This is a comprehensive machine learning-based product recommendation system built using Amazon product data. **SmartShopper** uses multiple recommendation strategies (content-based, item-based, hybrid) along with a sentiment analysis model to enhance personalization. It also includes a chatbot for user interaction.
 
